@@ -2,8 +2,8 @@ application:
     build: code
     volumes:
         - ./symfony:/var/www/symfony
-        - ./logs/symfony:/var/www/symfony/app/logs
     tty: true
+    restart: always
 db:
     image: mysql
     ports:
@@ -11,8 +11,13 @@ db:
     environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: symfony
-        MYSQL_USER: root
+        MYSQL_USER: user
         MYSQL_PASSWORD: root
+# Mongo DB Values
+#    image: mongo:3.0.8
+#    ports:
+#        - 27017:27017        
+#    restart: always
 php:
     build: php-fpm
     ports:
@@ -21,6 +26,7 @@ php:
         - application
     links:
         - db
+    restart: always
 nginx:
     build: nginx
     ports:
@@ -31,14 +37,4 @@ nginx:
         - application
     volumes:
         - ./logs/nginx/:/var/log/nginx
-elk:
-    image: willdurand/elk
-    ports:
-        - 81:80
-    volumes:
-        - ./elk/logstash:/etc/logstash
-        - ./elk/logstash/patterns:/opt/logstash/patterns
-    volumes_from:
-        - application
-        - php
-        - nginx
+    restart: always
