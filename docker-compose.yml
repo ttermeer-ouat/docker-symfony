@@ -17,7 +17,7 @@ db:
 #    image: mongo:3.0.8
 #    ports:
 #        - 27017:27017        
-#    restart: always
+    restart: always
 php:
     build: php-fpm
     ports:
