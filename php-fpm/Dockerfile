@@ -10,10 +10,14 @@ ADD symfony.ini /etc/php5/cli/conf.d/
 
 ADD symfony.pool.conf /etc/php5/fpm/pool.d/
 
-RUN usermod -u 1000 www-data
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer
 
-CMD ["php5-fpm", "-F"]
+RUN usermod -u 1000 www-data
+
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 9000
+
+CMD ["php5-fpm", "-F"]
