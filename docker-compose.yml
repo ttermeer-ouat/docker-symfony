@@ -2,6 +2,7 @@ application:
     build: code
     volumes:
         - ./symfony:/var/www/symfony
+        - ./logs/symfony:/var/www/symfony/app/logs
     tty: true
     restart: always
 db:
@@ -37,4 +38,16 @@ nginx:
         - application
     volumes:
         - ./logs/nginx/:/var/log/nginx
+    restart: always
+elk:
+    image: willdurand/elk
+    ports:
+        - 81:80
+    volumes:
+        - ./elk/logstash:/etc/logstash
+        - ./elk/logstash/patterns:/opt/logstash/patterns
+    volumes_from:
+        - application
+        - php
+        - nginx
     restart: always
